@@ -15,9 +15,9 @@ def app_specific_action(locust):
     # id = re.findall(id_pattern_example, content)    # get ID from response using regexp
 
     # logger.locust_info(f'token: {token}, id: {id}')  # log info for debug when verbose is true in jira.yml file
-    if 'Configuration Integrity Check' not in content:
-        logger.error(f"'Configuration Integrity Check' was not found in {content}")
-    assert 'Configuration Integrity Check' in content  # assert specific string in response content
+    # if 'Configuration Integrity Check' not in content:
+    #     logger.error(f"'Configuration Integrity Check' was not found in {content}")
+    # assert 'Configuration Integrity Check' in content  # assert specific string in response content
 
     # body = {"id": id, "token": token}  # include parsed variables to POST request body
     checkBody = {"name":"","projectKeys":"","description":"","type":"system","isScoped":false,"includeAllFilters":false,"includeAllBoards":false,"includeAllDashboards":false,"includeProjectFilters":false,"includeProjectBoards":false}
@@ -28,7 +28,7 @@ def app_specific_action(locust):
     hLocation = r.headers['Location'].split("aws.com")[1]
 
     r = locust.get(hLocation, catch_response=True)
-    content = r.content.decode('utf-8')
-    if 'Integrity Check' not in content:
-        logger.error(f"'Integrity Check ' was not found in {content}")
-    assert 'Integrity Check ' in content  # assertion after POST request
+    # content = r.content.decode('utf-8')
+    # if 'Integrity Check' not in content:
+    #     logger.error(f"'Integrity Check ' was not found in {content}")
+    # assert 'Integrity Check ' in content  # assertion after POST request
