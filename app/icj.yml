@@ -1,0 +1,36 @@
+execution:
+- concurrency: 1
+  ramp-up: 3m
+  hold-for: 15m
+  scenario: icj
+
+scenarios:
+ icj:
+    variables:
+      checkBody: '{"name":"","projectKeys":"","description":"","type":"system","isScoped":false,"includeAllFilters":false,"includeAllBoards":false,"includeAllDashboards":false,"includeProjectFilters":false,"includeProjectBoards":false}'
+      snapshotBodyAPI: '{"type":"system","checkCustomFieldValues":true,"includeAttachmentFiles":false,"filters":[],"boards":[],"dashboards":[],"includeAllFilters":false,"includeAllBoards":false,"includeAllDashboards":false,"projectKeys":null,"hasValidAgileVersion":true,"name":"snapA"}'
+      counter: 1
+    default-address: http://jira-loadb-15n7hs54d951w-1722984228.us-west-2.elb.amazonaws.com/  
+    headers:
+      User-Agent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36'
+      Accept-Language: 'en-US,en;q=0.9,bg;q=0.8'
+      Accept-Encoding: 'gzip, deflate'
+      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'
+      Content-Type: 'application/json;charset=UTF-8'
+    authorization:
+      url: http://jira-loadb-15n7hs54d951w-1722984228.us-west-2.elb.amazonaws.com/
+      name: admin
+      password: admin
+    requests:
+    # ICJ main page
+    - /secure/ConfigurationIntegrityCheck.jspa#system
+
+    # Run check
+    - url: /rest/integrity-check/1.0/integrity
+      method: POST
+      body: ${checkBody}
+
+    # Run check API
+    - url: /rest/integrity-check/api/1.4/integrity
+      method: POST
+      body: '{"scope" : "system"}'
