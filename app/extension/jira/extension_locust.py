@@ -20,10 +20,10 @@ def app_specific_action(locust):
     # assert 'Configuration Integrity Check' in content  # assert specific string in response content
 
     # body = {"id": id, "token": token}  # include parsed variables to POST request body
-    # checkBody = {"name":"","projectKeys":"","description":"","type":"system","isScoped":false,"includeAllFilters":false,"includeAllBoards":false,"includeAllDashboards":false,"includeProjectFilters":false,"includeProjectBoards":false}
+    checkBody = {"name":"","projectKeys":"","description":"","type":"system","isScoped":"false","includeAllFilters":"false","includeAllBoards":"false","includeAllDashboards":"false","includeProjectFilters":"false","includeProjectBoards":"false"}
     apiCheckBody = {"scope" : "system"}
-    headers = {'content-type': 'application/json'}
-    r = locust.post('/rest/integrity-check/1.0/integrity', apiCheckBody, headers, catch_response=True)  # call app-specific POST endpoint
+    headers = {'content-type': 'application/json;charset=UTF-8'}
+    r = locust.post('/rest/integrity-check/1.0/integrity', checkBody, headers, catch_response=True)  # call app-specific POST endpoint
 
     hLocation = r.headers['Location'].split("aws.com")[1]
 
