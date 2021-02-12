@@ -25,7 +25,7 @@ def app_specific_action(locust):
     headers = {'content-type': 'application/json'}
     r = locust.post('/rest/integrity-check/1.0/integrity', checkBody, headers, catch_response=True)  # call app-specific POST endpoint
 
-    hLocation = r.headers['Location']
+    hLocation = r.headers['Location'].split("aws.com")[1]
 
     r = locust.get(hLocation, catch_response=True)
     content = r.content.decode('utf-8')
