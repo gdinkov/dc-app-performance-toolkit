@@ -9470,7 +9470,7 @@ vars.put(&quot;random_page&quot;, String.valueOf(random_page));</stringProp>
               <stringProp name="HTTPSampler.port"></stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">${application.postfix}/rest/integrity-check/api/1.4/integrity</stringProp>
+              <stringProp name="HTTPSampler.path">${application.postfix}/rest/integrity-check/1.0/integrity</stringProp>
               <stringProp name="HTTPSampler.method">POST</stringProp>
               <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -9484,7 +9484,7 @@ vars.put(&quot;random_page&quot;, String.valueOf(random_page));</stringProp>
               <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
                 <collectionProp name="HeaderManager.headers">
                   <elementProp name="" elementType="Header">
-                    <stringProp name="Header.name">content-type</stringProp>
+                    <stringProp name="Header.name">Content-Type</stringProp>
                     <stringProp name="Header.value">application/json</stringProp>
                   </elementProp>
                 </collectionProp>
