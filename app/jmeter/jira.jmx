@@ -9350,12 +9350,12 @@ vars.put(&quot;random_page&quot;, String.valueOf(random_page));</stringProp>
             <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request" enabled="true">
               <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
                 <collectionProp name="Arguments.arguments">
-                  <elementProp name="webSudoPassword" elementType="HTTPArgument">
+                  <elementProp name="&quot;webSudoPassword&quot;" elementType="HTTPArgument">
                     <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">admin</stringProp>
+                    <stringProp name="Argument.value">&quot;admin&quot;</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
                     <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                    <stringProp name="Argument.name">webSudoPassword</stringProp>
+                    <stringProp name="Argument.name">&quot;webSudoPassword&quot;</stringProp>
                   </elementProp>
                 </collectionProp>
               </elementProp>
@@ -9392,27 +9392,7 @@ vars.put(&quot;random_page&quot;, String.valueOf(random_page));</stringProp>
               <stringProp name="HTTPSampler.connect_timeout"></stringProp>
               <stringProp name="HTTPSampler.response_timeout"></stringProp>
             </HTTPSamplerProxy>
-            <hashTree>
-              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Regular Expression Extractor" enabled="true">
-                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-                <stringProp name="RegexExtractor.refname"></stringProp>
-                <stringProp name="RegexExtractor.regex"></stringProp>
-                <stringProp name="RegexExtractor.template"></stringProp>
-                <stringProp name="RegexExtractor.default"></stringProp>
-                <stringProp name="RegexExtractor.match_number"></stringProp>
-              </RegexExtractor>
-              <hashTree/>
-              <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
-                <collectionProp name="Asserion.test_strings">
-                  <stringProp name="-927381781">Configuration Integrity Check</stringProp>
-                </collectionProp>
-                <stringProp name="Assertion.custom_message"></stringProp>
-                <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
-                <boolProp name="Assertion.assume_success">false</boolProp>
-                <intProp name="Assertion.test_type">16</intProp>
-              </ResponseAssertion>
-              <hashTree/>
-            </hashTree>
+            <hashTree/>
             <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request" enabled="true">
               <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
               <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
