@@ -6,6 +6,9 @@ logger = init_logger(app_type='jira')
 
 @jira_measure("locust_app_specific_action")
 def app_specific_action(locust):
+    webSudoBody = {"webSudoPassword"="admin"}
+    r = locust.post('secure/admin/WebSudoAuthenticate.jspa', params=webSudoBody, catch_response=True)
+ 
     r = locust.get('/secure/ConfigurationIntegrityCheck.jspa#system', catch_response=True)  # call app-specific GET endpoint
     # content = r.content.decode('utf-8')   # decode response content
 
@@ -23,7 +26,7 @@ def app_specific_action(locust):
     checkBody = {"name":"","projectKeys":"","description":"","type":"system","isScoped":"false","includeAllFilters":"false","includeAllBoards":"false","includeAllDashboards":"false","includeProjectFilters":"false","includeProjectBoards":"false"}
     apiCheckBody = {"scope" : "system"}
     headers = {'content-type': 'application/json'}
-    r = locust.post('/rest/integrity-check/1.0/integrity', json=checkBody, headers=ADMIN_HEADERS, catch_response=True)  # call app-specific POST endpoint
+    r = locust.post('/rest/integrity-check/1.0/integrity', json=checkBody, headers=headers, catch_response=True)  # call app-specific POST endpoint
 
     hLocation = r.headers['Location'].split("aws.com")[1]
 
