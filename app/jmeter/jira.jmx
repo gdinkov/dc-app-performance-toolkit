@@ -9320,7 +9320,7 @@ vars.put(&quot;random_page&quot;, String.valueOf(random_page));</stringProp>
                   <boolProp name="AuthManager.controlledByThreadGroup">false</boolProp>
                 </AuthManager>
                 <hashTree/>
-                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="check_id" enabled="true">
+                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="check_id" enabled="false">
                   <stringProp name="RegexExtractor.useHeaders">true</stringProp>
                   <stringProp name="RegexExtractor.refname">check_id</stringProp>
                   <stringProp name="RegexExtractor.regex">Location: http:\/\/jira-loadb-15n7hs54d951w-1722984228.us-west-2.elb.amazonaws.com\/rest\/integrity-check\/1.0\/integrity\/(.+)</stringProp>
@@ -9329,8 +9329,16 @@ vars.put(&quot;random_page&quot;, String.valueOf(random_page));</stringProp>
                   <stringProp name="RegexExtractor.match_number"></stringProp>
                 </RegexExtractor>
                 <hashTree/>
+                <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="true">
+                  <stringProp name="scriptLanguage">groovy</stringProp>
+                  <stringProp name="parameters"></stringProp>
+                  <stringProp name="filename"></stringProp>
+                  <stringProp name="cacheKey">true</stringProp>
+                  <stringProp name="script">sleep(2000)</stringProp>
+                </JSR223PostProcessor>
+                <hashTree/>
               </hashTree>
-              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET check proc" enabled="true">
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET check proc" enabled="false">
                 <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
                   <collectionProp name="Arguments.arguments"/>
                 </elementProp>
