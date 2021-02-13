@@ -7,7 +7,7 @@ logger = init_logger(app_type='jira')
 @jira_measure("locust_app_specific_action")
 def app_specific_action(locust):
     r = locust.get('/secure/ConfigurationIntegrityCheck.jspa#system', catch_response=True)  # call app-specific GET endpoint
-    content = r.content.decode('utf-8')   # decode response content
+    # content = r.content.decode('utf-8')   # decode response content
 
     # token_pattern_example = '"token":"(.+?)"'
     # id_pattern_example = '"id":"(.+?)"'
@@ -22,8 +22,8 @@ def app_specific_action(locust):
     # body = {"id": id, "token": token}  # include parsed variables to POST request body
     checkBody = {"name":"","projectKeys":"","description":"","type":"system","isScoped":"false","includeAllFilters":"false","includeAllBoards":"false","includeAllDashboards":"false","includeProjectFilters":"false","includeProjectBoards":"false"}
     apiCheckBody = {"scope" : "system"}
-    headers = {'content-type': 'application/json;charset=UTF-8'}
-    r = locust.post('/rest/integrity-check/1.0/integrity', checkBody, headers, catch_response=True)  # call app-specific POST endpoint
+    # headers = {'content-type': 'application/json'}
+    r = locust.post('/rest/integrity-check/1.0/integrity', None, checkBody, catch_response=True)  # call app-specific POST endpoint
 
     hLocation = r.headers['Location'].split("aws.com")[1]
 
