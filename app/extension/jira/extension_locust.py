@@ -23,7 +23,7 @@ def app_specific_action(locust):
     checkBody = {"name":"","projectKeys":"","description":"","type":"system","isScoped":"false","includeAllFilters":"false","includeAllBoards":"false","includeAllDashboards":"false","includeProjectFilters":"false","includeProjectBoards":"false"}
     apiCheckBody = {"scope" : "system"}
     headers = {'content-type': 'application/json'}
-    r = locust.post('/rest/integrity-check/1.0/integrity', json=checkBody, headers=headers, catch_response=True)  # call app-specific POST endpoint
+    r = locust.post('/rest/integrity-check/1.0/integrity', json=checkBody, headers=ADMIN_HEADERS, catch_response=True)  # call app-specific POST endpoint
 
     hLocation = r.headers['Location'].split("aws.com")[1]
 
