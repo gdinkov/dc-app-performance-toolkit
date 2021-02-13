@@ -16,22 +16,22 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="application.hostname" elementType="Argument">
             <stringProp name="Argument.name">application.hostname</stringProp>
-            <stringProp name="Argument.value">jira-loadb-15n7hs54d951w-1722984228.us-west-2.elb.amazonaws.com</stringProp>
+            <stringProp name="Argument.value">${__lowercase(${__P(application_hostname, your_jira_instance)})}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="application.port" elementType="Argument">
             <stringProp name="Argument.name">application.port</stringProp>
-            <stringProp name="Argument.value">80</stringProp>
+            <stringProp name="Argument.value">${__P(application_port, 80)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="application.protocol" elementType="Argument">
             <stringProp name="Argument.name">application.protocol</stringProp>
-            <stringProp name="Argument.value">http</stringProp>
+            <stringProp name="Argument.value">${__P(application_protocol, http)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="application.postfix" elementType="Argument">
             <stringProp name="Argument.name">application.postfix</stringProp>
-            <stringProp name="Argument.value"></stringProp>
+            <stringProp name="Argument.value">${__P(application_postfix, )}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -9461,7 +9461,7 @@ vars.put(&quot;random_page&quot;, String.valueOf(random_page));</stringProp>
                 <collectionProp name="Arguments.arguments">
                   <elementProp name="" elementType="HTTPArgument">
                     <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value">{&quot;name&quot;:&quot;&quot;,&quot;projectKeys&quot;:&quot;&quot;,&quot;description&quot;:&quot;&quot;,&quot;type&quot;:&quot;system&quot;,&quot;isScoped&quot;:&quot;false&quot;,&quot;includeAllFilters&quot;:&quot;false&quot;,&quot;includeAllBoards&quot;:&quot;false&quot;,&quot;includeAllDashboards&quot;:&quot;false&quot;,&quot;includeProjectFilters&quot;:&quot;false&quot;,&quot;includeProjectBoards&quot;:&quot;false&quot;}</stringProp>
+                    <stringProp name="Argument.value">{&quot;scope&quot; : &quot;system&quot;}</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
                   </elementProp>
                 </collectionProp>
@@ -9470,7 +9470,7 @@ vars.put(&quot;random_page&quot;, String.valueOf(random_page));</stringProp>
               <stringProp name="HTTPSampler.port"></stringProp>
               <stringProp name="HTTPSampler.protocol"></stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">${application.postfix}/rest/integrity-check/1.0/integrity</stringProp>
+              <stringProp name="HTTPSampler.path">${application.postfix}/rest/integrity-check/api/1.4/integrity</stringProp>
               <stringProp name="HTTPSampler.method">POST</stringProp>
               <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
