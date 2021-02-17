@@ -310,33 +310,36 @@ def edit_issue(locust):
 
 @jira_measure('locust_view_dashboard')
 def view_dashboard(locust):
-    raise_if_login_failed(locust)
-    params = ViewDashboard()
+    try:
+        raise_if_login_failed(locust)
+        params = ViewDashboard()
 
-    r = locust.get('/secure/Dashboard.jspa', catch_response=True)
-    content = r.content.decode('utf-8')
-    if not (f'title="loggedInUser" value="{locust.session_data_storage["username"]}">' in content):
-        logger.error(f'User {locust.session_data_storage["username"]} authentication failed: {content}')
-    assert f'title="loggedInUser" value="{locust.session_data_storage["username"]}">' in content, \
-        'User authentication failed'
-    locust.post('/rest/webResources/1.0/resources', json=params.resources_body.get("605"),
-                headers=RESOURCE_HEADERS, catch_response=True)
-    r = locust.post('/plugins/servlet/gadgets/dashboard-diagnostics',
-                    params={'uri': f'{JIRA_SETTINGS.server_url.lower()}//secure/Dashboard.jspa'},
-                    headers=TEXT_HEADERS, catch_response=True)
-    content = r.content.decode('utf-8')
-    if not ('Dashboard Diagnostics: OK' in content):
-        logger.error(f'view_dashboard dashboard-diagnostics failed: {content}')
-    assert 'Dashboard Diagnostics: OK' in content, 'view_dashboard dashboard-diagnostics failed'
-    locust.post('/rest/webResources/1.0/resources', json=params.resources_body.get("620"),
-                headers=RESOURCE_HEADERS, catch_response=True)
-    locust.get(f'/rest/activity-stream/1.0/preferences?_={timestamp_int()}', catch_response=True)
-    locust.get('/rest/gadget/1.0/issueTable/jql?num=10&tableContext=jira.table.cols.dashboard&addDefault=true'
-               '&enableSorting=true&paging=true&showActions=true'
-               '&jql=assignee+%3D+currentUser()+AND+resolution+%3D+unresolved+ORDER+BY+priority+'
-               'DESC%2C+created+ASC&sortBy=&startIndex=0&_=1588507042019', catch_response=True)
-    locust.get(f'/plugins/servlet/streams?maxResults=5&relativeLinks=true&_={timestamp_int()}',
-               catch_response=True)
+        r = locust.get('/secure/Dashboard.jspa', catch_response=True)
+        content = r.content.decode('utf-8')
+        if not (f'title="loggedInUser" value="{locust.session_data_storage["username"]}">' in content):
+            logger.error(f'User {locust.session_data_storage["username"]} authentication failed: {content}')
+        assert f'title="loggedInUser" value="{locust.session_data_storage["username"]}">' in content, \
+            'User authentication failed'
+        locust.post('/rest/webResources/1.0/resources', json=params.resources_body.get("605"),
+                    headers=RESOURCE_HEADERS, catch_response=True)
+        r = locust.post('/plugins/servlet/gadgets/dashboard-diagnostics',
+                        params={'uri': f'{JIRA_SETTINGS.server_url.lower()}//secure/Dashboard.jspa'},
+                        headers=TEXT_HEADERS, catch_response=True)
+        content = r.content.decode('utf-8')
+        if not ('Dashboard Diagnostics: OK' in content):
+            logger.error(f'view_dashboard dashboard-diagnostics failed: {content}')
+        assert 'Dashboard Diagnostics: OK' in content, 'view_dashboard dashboard-diagnostics failed'
+        locust.post('/rest/webResources/1.0/resources', json=params.resources_body.get("620"),
+                    headers=RESOURCE_HEADERS, catch_response=True)
+        locust.get(f'/rest/activity-stream/1.0/preferences?_={timestamp_int()}', catch_response=True)
+        locust.get('/rest/gadget/1.0/issueTable/jql?num=10&tableContext=jira.table.cols.dashboard&addDefault=true'
+                '&enableSorting=true&paging=true&showActions=true'
+                '&jql=assignee+%3D+currentUser()+AND+resolution+%3D+unresolved+ORDER+BY+priority+'
+                'DESC%2C+created+ASC&sortBy=&startIndex=0&_=1588507042019', catch_response=True)
+        locust.get(f'/plugins/servlet/streams?maxResults=5&relativeLinks=true&_={timestamp_int()}',
+                catch_response=True)
+    except:
+        pass
 
 
 def add_comment(locust):
