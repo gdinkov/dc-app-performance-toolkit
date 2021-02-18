@@ -9,32 +9,61 @@ def app_specific_action(locust):
     # webSudoBody = {"webSudoPassword"="admin"}
     # r = locust.post('secure/admin/WebSudoAuthenticate.jspa', params=webSudoBody, catch_response=True)
  
-    r = locust.get('/secure/ConfigurationIntegrityCheck.jspa#system', catch_response=True, auth=("admin", "admin"))  # call app-specific GET endpoint
-    content = r.content.decode('utf-8')   # decode response content
+    # IM stuff below
+    r = locust.get('/browse/AAAA-6', catch_response=True, auth=("admin", "admin"))
+    content = r.content.decode('utf-8')
+    if 'Sub Tasks Matrix' not in content:
+        logger.error(f"'Sub Tasks Matrix' was not found in {content}")
+    assert 'Sub Tasks Matrix' in content
 
-    if 'Configuration Integrity Check' not in content:
-        logger.error(f"'Configuration Integrity Check' was not found in {content}")
-    assert 'Configuration Integrity Check' in content
+    r = locust.get('/browse/AAAA-5', catch_response=True, auth=("admin", "admin"))
+    content = r.content.decode('utf-8')
+    if 'Sub Tasks Matrix' not in content:
+        logger.error(f"'Sub Tasks Matrix' was not found in {content}")
+    assert 'Sub Tasks Matrix' in content
+    if 'Link Matrix' not in content:
+        logger.error(f"'Link Matrix' was not found in {content}")
+    assert 'Link Matrix' in content
 
-    checkBody = {"name":"","projectKeys":"","description":"","type":"system","isScoped":"false","includeAllFilters":"false","includeAllBoards":"false","includeAllDashboards":"false","includeProjectFilters":"false","includeProjectBoards":"false"}
-    # ceckBody = {"scope" : "system"}
-    headers = {'content-type': 'application/json'}
-    r = locust.post('/rest/integrity-check/1.0/integrity', json=checkBody, headers=headers, catch_response=True)
+    r = locust.get('/rest/api/2/search?jql=issue%20in%20issueMatrix(%22AAAA-6%22%2C%20%22Sub%20Tasks%20Matrix%22)', catch_response=True, auth=("admin", "admin"))
+    content = r.content.decode('utf-8')
+    if 'AAAA-9' not in content:
+        logger.error(f"'AAAA-9' was not found in {content}")
+    assert 'AAAA-9' in content
+    if 'AAAA-8' not in content:
+        logger.error(f"'AAAA-8' was not found in {content}")
+    assert 'AAAA-8' in content
+    if 'AAAA-7' not in content:
+        logger.error(f"'AAAA-7' was not found in {content}")
+    assert 'AAAA-7' in content
 
-    hLocation = r.headers['Location'].split("aws.com")[1]
+    # ICJ stuff below
+    # r = locust.get('/secure/ConfigurationIntegrityCheck.jspa#system', catch_response=True, auth=("admin", "admin"))
+    # content = r.content.decode('utf-8')   # decode response content
 
-    try:
-        r = locust.get(hLocation, catch_response=True)
-        logger.info(f"Successful GET for job {hLocation}")
+    # if 'Configuration Integrity Check' not in content:
+    #     logger.error(f"'Configuration Integrity Check' was not found in {content}")
+    # assert 'Configuration Integrity Check' in content
 
-        content = r.content.decode('utf-8')
-        if 'Integrity' not in content:
-            logger.error(f"'Integrity ' was not found in {content}")
-        assert 'Integrity' in content
-    except:
-        logger.info(f"Skipped GET due to running job")
+    # checkBody = {"name":"","projectKeys":"","description":"","type":"system","isScoped":"false","includeAllFilters":"false","includeAllBoards":"false","includeAllDashboards":"false","includeProjectFilters":"false","includeProjectBoards":"false"}
+    # # ceckBody = {"scope" : "system"}
+    # headers = {'content-type': 'application/json'}
+    # r = locust.post('/rest/integrity-check/1.0/integrity', json=checkBody, headers=headers, catch_response=True)
 
+    # hLocation = r.headers['Location'].split("aws.com")[1]
 
+    # try:
+    #     r = locust.get(hLocation, catch_response=True)
+    #     logger.info(f"Successful GET for job {hLocation}")
+
+    #     content = r.content.decode('utf-8')
+    #     if 'Integrity' not in content:
+    #         logger.error(f"'Integrity ' was not found in {content}")
+    #     assert 'Integrity' in content
+    # except:
+    #     logger.info(f"Skipped GET due to running job")
+
+    # example below
     # r = locust.get('/app/get_endpoint', catch_response=True)  # call app-specific GET endpoint
     # content = r.content.decode('utf-8')   # decode response content
 

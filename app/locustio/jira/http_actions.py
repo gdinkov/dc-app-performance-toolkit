@@ -125,18 +125,21 @@ def create_issue(locust):
 
     @jira_measure('locust_create_issue:fill_and_submit_issue_form')
     def create_issue_submit_form():
-        raise_if_login_failed(locust)
-        issue_body = params.prepare_issue_body(locust.session_data_storage['issue_body_params_dict'],
-                                               user=locust.session_data_storage["username"])
+        try:
+            raise_if_login_failed(locust)
+            issue_body = params.prepare_issue_body(locust.session_data_storage['issue_body_params_dict'],
+                                                user=locust.session_data_storage["username"])
 
-        r = locust.post('/secure/QuickCreateIssue.jspa?decorator=none', params=issue_body,
-                        headers=ADMIN_HEADERS, catch_response=True)
-        content = r.content.decode('utf-8')
-        if '"id":"project","label":"Project"' not in content:
-            logger.error(f'{params.err_message_create_issue}: {content}')
-        assert '"id":"project","label":"Project"' in content, params.err_message_create_issue
-        issue_key = fetch_by_re(params.create_issue_key_pattern, content)
-        logger.locust_info(f"{params.action_name}: Issue {issue_key} was successfully created")
+            r = locust.post('/secure/QuickCreateIssue.jspa?decorator=none', params=issue_body,
+                            headers=ADMIN_HEADERS, catch_response=True)
+            content = r.content.decode('utf-8')
+            if '"id":"project","label":"Project"' not in content:
+                logger.error(f'{params.err_message_create_issue}: {content}')
+            assert '"id":"project","label":"Project"' in content, params.err_message_create_issue
+            issue_key = fetch_by_re(params.create_issue_key_pattern, content)
+            logger.locust_info(f"{params.action_name}: Issue {issue_key} was successfully created")
+        except:
+            pass
     create_issue_submit_form()
 
 
