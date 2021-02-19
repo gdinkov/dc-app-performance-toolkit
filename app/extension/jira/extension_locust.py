@@ -9,33 +9,92 @@ def app_specific_action(locust):
     # webSudoBody = {"webSudoPassword"="admin"}
     # r = locust.post('secure/admin/WebSudoAuthenticate.jspa', params=webSudoBody, catch_response=True)
  
+    # PA stuff below
+    r = locust.get('/secure/PowerAdminSearch.jspa?query=&type=CUSTOM_FIELD', catch_response=True, auth=("admin", "admin"))
+
+    r = locust.get('/rest/power-admin/1.0/search/types', catch_response=True)
+    content = r.content.decode('utf-8')
+
+    if 'Custom Field' not in content:
+        logger.error(f"'Custom Field' was not found in {content}")
+    assert 'Custom Field' in content
+
+    r = locust.get('/rest/power-admin/1.0/search/customfieldtypes', catch_response=True)
+    content = r.content.decode('utf-8')
+
+    if 'customfieldTypes' not in content:
+        logger.error(f"'customfieldTypes' was not found in {content}")
+    assert 'customfieldTypes' in content
+
+    searchBody = {"searchString":"","objectType":"CUSTOM_FIELD","fieldTypes":[],"projectTypes":[],"projectCategories":{"includeNoCategory":"false","categories":[]},"projectLeadKeys":[],"searchRequestsFilter":{"ownersKeys":[],"accessModes":[]}}
+    headers = {'content-type': 'application/json'}
+    r = locust.post('/rest/power-admin/1.0/search', json=searchBody, headers=headers, catch_response=True)
+    content = r.content.decode('utf-8')
+
+    if 'data' not in content:
+        logger.error(f"'data' was not found in {content}")
+    assert 'data' in content
+
+    hLocation = r.headers['Location'].split("aws.com")[1]
+
+    r = locust.get(hLocation, catch_response=True)
+    content = r.content.decode('utf-8')
+
+    if 'progress' not in content:
+        logger.error(f"'progress' was not found in {content}")
+    assert 'progress' in content
+
+    r = locust.get('/rest/power-admin/1.0/usage/header?type=CUSTOM_FIELD&id=customfield_10727', catch_response=True)
+    content = r.content.decode('utf-8')
+
+    if 'customfield_10727' not in content:
+        logger.error(f"'customfield_10727' was not found in {content}")
+    assert 'customfield_10727' in content
+
+    usageBody = {"objectType":"CUSTOM_FIELD","id":"customfield_10727"}
+    r = locust.post('/rest/power-admin/1.0/usage', json=usageBody, headers=headers, catch_response=True)
+    content = r.content.decode('utf-8')
+
+    if 'data' not in content:
+        logger.error(f"'data' was not found in {content}")
+    assert 'data' in content
+
+    hLocation = r.headers['Location'].split("aws.com")[1]
+
+    r = locust.get(hLocation, catch_response=True)
+    content = r.content.decode('utf-8')
+
+    if 'progress' not in content:
+        logger.error(f"'progress' was not found in {content}")
+    assert 'progress' in content
+
     # IM stuff below
-    r = locust.get('/browse/AAAA-6', catch_response=True, auth=("admin", "admin"))
-    content = r.content.decode('utf-8')
-    if 'Sub Tasks Matrix' not in content:
-        logger.error(f"'Sub Tasks Matrix' was not found in {content}")
-    assert 'Sub Tasks Matrix' in content
+    # r = locust.get('/browse/AAAA-6', catch_response=True, auth=("admin", "admin"))
+    # content = r.content.decode('utf-8')
+    # if 'Sub Tasks Matrix' not in content:
+    #     logger.error(f"'Sub Tasks Matrix' was not found in {content}")
+    # assert 'Sub Tasks Matrix' in content
 
-    r = locust.get('/browse/AAAA-5', catch_response=True, auth=("admin", "admin"))
-    content = r.content.decode('utf-8')
-    if 'Sub Tasks Matrix' not in content:
-        logger.error(f"'Sub Tasks Matrix' was not found in {content}")
-    assert 'Sub Tasks Matrix' in content
-    if 'Link Matrix' not in content:
-        logger.error(f"'Link Matrix' was not found in {content}")
-    assert 'Link Matrix' in content
+    # r = locust.get('/browse/AAAA-5', catch_response=True, auth=("admin", "admin"))
+    # content = r.content.decode('utf-8')
+    # if 'Sub Tasks Matrix' not in content:
+    #     logger.error(f"'Sub Tasks Matrix' was not found in {content}")
+    # assert 'Sub Tasks Matrix' in content
+    # if 'Link Matrix' not in content:
+    #     logger.error(f"'Link Matrix' was not found in {content}")
+    # assert 'Link Matrix' in content
 
-    r = locust.get('/rest/api/2/search?jql=issue%20in%20issueMatrix(%22AAAA-6%22%2C%20%22Sub%20Tasks%20Matrix%22)', catch_response=True, auth=("admin", "admin"))
-    content = r.content.decode('utf-8')
-    if 'AAAA-9' not in content:
-        logger.error(f"'AAAA-9' was not found in {content}")
-    assert 'AAAA-9' in content
-    if 'AAAA-8' not in content:
-        logger.error(f"'AAAA-8' was not found in {content}")
-    assert 'AAAA-8' in content
-    if 'AAAA-7' not in content:
-        logger.error(f"'AAAA-7' was not found in {content}")
-    assert 'AAAA-7' in content
+    # r = locust.get('/rest/api/2/search?jql=issue%20in%20issueMatrix(%22AAAA-6%22%2C%20%22Sub%20Tasks%20Matrix%22)', catch_response=True, auth=("admin", "admin"))
+    # content = r.content.decode('utf-8')
+    # if 'AAAA-9' not in content:
+    #     logger.error(f"'AAAA-9' was not found in {content}")
+    # assert 'AAAA-9' in content
+    # if 'AAAA-8' not in content:
+    #     logger.error(f"'AAAA-8' was not found in {content}")
+    # assert 'AAAA-8' in content
+    # if 'AAAA-7' not in content:
+    #     logger.error(f"'AAAA-7' was not found in {content}")
+    # assert 'AAAA-7' in content
 
     # ICJ stuff below
     # r = locust.get('/secure/ConfigurationIntegrityCheck.jspa#system', catch_response=True, auth=("admin", "admin"))
