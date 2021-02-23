@@ -1,4 +1,5 @@
 import re
+import time
 from locustio.common_utils import init_logger, jira_measure
 
 logger = init_logger(app_type='jira')
@@ -8,65 +9,113 @@ logger = init_logger(app_type='jira')
 def app_specific_action(locust):
     # webSudoBody = {"webSudoPassword"="admin"}
     # r = locust.post('secure/admin/WebSudoAuthenticate.jspa', params=webSudoBody, catch_response=True)
- 
-    # PA stuff below
-    r = locust.get('/secure/PowerAdminSearch.jspa?query=&type=CUSTOM_FIELD', catch_response=True, auth=("admin", "admin"))
 
-    r = locust.get('/rest/power-admin/1.0/search/types', catch_response=True)
-    content = r.content.decode('utf-8')
+    # CMJ stuff below
+    r = locust.get('/secure/ConfigurationSnapshot.jspa', catch_response=True, auth=("admin", "admin"))
+    content = r.content.decode('utf-8')   # decode response content
 
-    if 'Custom Field' not in content:
-        logger.error(f"'Custom Field' was not found in {content}")
-    assert 'Custom Field' in content
+    if 'Configuration Snapshots' not in content:
+        logger.error(f"'Configuration Snapshots' was not found in {content}")
+    assert 'Configuration Snapshots' in content
 
-    r = locust.get('/rest/power-admin/1.0/search/customfieldtypes', catch_response=True)
-    content = r.content.decode('utf-8')
-
-    if 'customfieldTypes' not in content:
-        logger.error(f"'customfieldTypes' was not found in {content}")
-    assert 'customfieldTypes' in content
-
-    searchBody = {"searchString":"","objectType":"CUSTOM_FIELD","fieldTypes":[],"projectTypes":[],"projectCategories":{"includeNoCategory":"false","categories":[]},"projectLeadKeys":[],"searchRequestsFilter":{"ownersKeys":[],"accessModes":[]}}
+    snapshotName = "testSnapshot" + str(int(time.time()*1000))
+    snapshotCreateBody = {"type":"projectWithIssues","filter":"","includeAllIssues":"true","checkCustomFieldValues":"true","includeAttachmentFiles":"false","filters":[],"boards":[],"dashboards":[],"appsWithGlobalData":[],"includeAllFilters":"false","includeAllBoards":"false","includeAllDashboards":"false","includeGlobalAppData":"false","includeProjectFilters":"true","includeProjectBoards":"true","filterSelectionApplied":"false","boardSelectionApplied":"false","projectKeys":["CRUSR"],"hasValidAgileVersion":"true","name":snapshotName}
     headers = {'content-type': 'application/json'}
-    r = locust.post('/rest/power-admin/1.0/search', json=searchBody, headers=headers, catch_response=True)
+    r = locust.post('/rest/configuration-manager/1.0/snapshots', json=snapshotCreateBody, headers=headers, catch_response=True)
+
     content = r.content.decode('utf-8')
+    progressID = content.split("/")[1]
 
-    if 'data' not in content:
-        logger.error(f"'data' was not found in {content}")
-    assert 'data' in content
+    try:
+        r = locust.get("/rest/configuration-manager/1.0/snapshots/progress/" + progressID, catch_response=True)
+        logger.info(f"Successful GET for job {progressID}")
 
-    hLocation = r.headers['Location'].split("aws.com")[1]
+        content = r.content.decode('utf-8')
+        if 'auditMaxSeverity' not in content:
+            logger.error(f"'auditMaxSeverity' was not found in {content}")
+        assert 'auditMaxSeverity' in content
+    except:
+        logger.info(f"Skipped due to running job {progressID}")
+ 
+    r = locust.get('/secure/ConfigurationDeploy.jspa', catch_response=True, auth=("admin", "admin"))
+    content = r.content.decode('utf-8')   # decode response content
 
-    r = locust.get(hLocation, catch_response=True)
-    content = r.content.decode('utf-8')
+    if 'Deploy Configuration Snapshot' not in content:
+        logger.error(f"'Deploy Configuration Snapshot' was not found in {content}")
+    assert 'Deploy Configuration Snapshot' in content
 
-    if 'progress' not in content:
-        logger.error(f"'progress' was not found in {content}")
-    assert 'progress' in content
+    r = locust.get('/secure/ManageAuditConfiguration.jspa', catch_response=True, auth=("admin", "admin"))
+    content = r.content.decode('utf-8')   # decode response content
 
-    r = locust.get('/rest/power-admin/1.0/usage/header?type=CUSTOM_FIELD&id=customfield_10727', catch_response=True)
-    content = r.content.decode('utf-8')
+    if 'Audit Logs' not in content:
+        logger.error(f"'Audit Logs' was not found in {content}")
+    assert 'Audit Logs' in content
 
-    if 'customfield_10727' not in content:
-        logger.error(f"'customfield_10727' was not found in {content}")
-    assert 'customfield_10727' in content
+    r = locust.get('/secure/ManageAuditConfiguration.jspa#/details?id=1', catch_response=True, auth=("admin", "admin"))
+    content = r.content.decode('utf-8')   # decode response content
 
-    usageBody = {"objectType":"CUSTOM_FIELD","id":"customfield_10727"}
-    r = locust.post('/rest/power-admin/1.0/usage', json=usageBody, headers=headers, catch_response=True)
-    content = r.content.decode('utf-8')
+    if 'Audit Logs' not in content:
+        logger.error(f"'Audit Logs' was not found in {content}")
+    assert 'Audit Logs' in content
 
-    if 'data' not in content:
-        logger.error(f"'data' was not found in {content}")
-    assert 'data' in content
+    # PA stuff below
+    # r = locust.get('/secure/PowerAdminSearch.jspa?query=&type=CUSTOM_FIELD', catch_response=True, auth=("admin", "admin"))
 
-    hLocation = r.headers['Location'].split("aws.com")[1]
+    # r = locust.get('/rest/power-admin/1.0/search/types', catch_response=True)
+    # content = r.content.decode('utf-8')
 
-    r = locust.get(hLocation, catch_response=True)
-    content = r.content.decode('utf-8')
+    # if 'Custom Field' not in content:
+    #     logger.error(f"'Custom Field' was not found in {content}")
+    # assert 'Custom Field' in content
 
-    if 'progress' not in content:
-        logger.error(f"'progress' was not found in {content}")
-    assert 'progress' in content
+    # r = locust.get('/rest/power-admin/1.0/search/customfieldtypes', catch_response=True)
+    # content = r.content.decode('utf-8')
+
+    # if 'customfieldTypes' not in content:
+    #     logger.error(f"'customfieldTypes' was not found in {content}")
+    # assert 'customfieldTypes' in content
+
+    # searchBody = {"searchString":"","objectType":"CUSTOM_FIELD","fieldTypes":[],"projectTypes":[],"projectCategories":{"includeNoCategory":"false","categories":[]},"projectLeadKeys":[],"searchRequestsFilter":{"ownersKeys":[],"accessModes":[]}}
+    # headers = {'content-type': 'application/json'}
+    # r = locust.post('/rest/power-admin/1.0/search', json=searchBody, headers=headers, catch_response=True)
+    # content = r.content.decode('utf-8')
+
+    # if 'data' not in content:
+    #     logger.error(f"'data' was not found in {content}")
+    # assert 'data' in content
+
+    # hLocation = r.headers['Location'].split("aws.com")[1]
+
+    # r = locust.get(hLocation, catch_response=True)
+    # content = r.content.decode('utf-8')
+
+    # if 'progress' not in content:
+    #     logger.error(f"'progress' was not found in {content}")
+    # assert 'progress' in content
+
+    # r = locust.get('/rest/power-admin/1.0/usage/header?type=CUSTOM_FIELD&id=customfield_10727', catch_response=True)
+    # content = r.content.decode('utf-8')
+
+    # if 'customfield_10727' not in content:
+    #     logger.error(f"'customfield_10727' was not found in {content}")
+    # assert 'customfield_10727' in content
+
+    # usageBody = {"objectType":"CUSTOM_FIELD","id":"customfield_10727"}
+    # r = locust.post('/rest/power-admin/1.0/usage', json=usageBody, headers=headers, catch_response=True)
+    # content = r.content.decode('utf-8')
+
+    # if 'data' not in content:
+    #     logger.error(f"'data' was not found in {content}")
+    # assert 'data' in content
+
+    # hLocation = r.headers['Location'].split("aws.com")[1]
+
+    # r = locust.get(hLocation, catch_response=True)
+    # content = r.content.decode('utf-8')
+
+    # if 'progress' not in content:
+    #     logger.error(f"'progress' was not found in {content}")
+    # assert 'progress' in content
 
     # IM stuff below
     # r = locust.get('/browse/AAAA-6', catch_response=True, auth=("admin", "admin"))
